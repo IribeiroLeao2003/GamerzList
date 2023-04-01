@@ -1,0 +1,11 @@
+﻿body {
+}
+
+.uInfo {
+    text-align: center;
+    width: 400px;
+    margin: 300px auto;
+    border-style: inset;
+    border-color: darkorange;
+    background-color: darkgoldenrod;
+}

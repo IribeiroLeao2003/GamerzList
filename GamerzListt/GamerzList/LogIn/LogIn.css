@@ -1,0 +1,41 @@
+﻿body {
+    background-color: black;
+    background-size: cover;
+    background-position: center;
+}
+
+.mainlog {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    width: 200px;
+    margin: 300px auto;
+    border-style: inset;
+    border-color: darkorange;
+    background-color: darkgoldenrod;
+    color: white;
+    padding: 20px;
+}
+
+input[type=text].styled1 {
+    background: #FFFFFF no-repeat 4px 4px;
+}
+
+.button,
+.button2 {
+    background-color: #E3E1B8;
+    padding: 2px 4px;
+    font: 13px sans-serif;
+    text-decoration: none;
+    border: 1px solid #000;
+    border-color: #aaa #444 #444 #aaa;
+    color: #000;
+}
+
+.button2 {
+    text-align: right;
+}
+
+a {
+    color: white;
+}

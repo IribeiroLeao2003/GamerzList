@@ -1,0 +1,19 @@
+﻿body {
+}
+
+
+.box {
+    width: 400px;
+    margin: 0 auto;
+}
+
+    .box label {
+        display: inline-block;
+        width: 150px;
+        text-align: right;
+        margin-right: 10px;
+    }
+
+    .box p {
+        margin: 10px 0;
+    }

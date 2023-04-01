@@ -1,0 +1,23 @@
+﻿body {
+    background-color: black;
+    background-size: cover;
+    background-position: center;
+}
+
+.navbar {
+    border: 5px solid darkorange;
+    background-color: darkorange !important;
+}
+
+.nav-link {
+    color: white !important;
+    text-decoration: none !important;
+    display: block;
+    text-align: center;
+    padding: 10px;
+}
+
+    .nav-link:hover {
+        color: white !important;
+        background-color: #FF8C00 !important;
+    }

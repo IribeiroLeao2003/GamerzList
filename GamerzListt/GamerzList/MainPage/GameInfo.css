@@ -1,0 +1,63 @@
+﻿body {
+}
+
+.showinfo {
+    text-align: left;
+    width: 400px;
+    margin: 300px auto;
+    border-style: inset;
+    border-color: darkorange;
+    background-color: darkgoldenrod; 
+}
+
+.userBox {
+    position: absolute;
+    width: 170px;
+    right: 1px;
+    height: 45px;
+    top: 0;
+    background-color: darkorange;
+    border-style: inset;
+    border-color: darkorange;
+}
+
+.dropbtn {
+    background-color: darkorange;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    top: 0;
+    position: absolute;
+    right: 0;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: darkorange;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+        .dropdown-content a:hover {
+            background-color: darkorange
+        }
+
+.show {
+    display: block;
+}
