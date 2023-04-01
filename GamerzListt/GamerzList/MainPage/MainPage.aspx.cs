@@ -14,6 +14,7 @@ using System.CodeDom;
 using Microsoft.SqlServer.Server;
 using static System.Net.Mime.MediaTypeNames;
 using GamerzList.Models;
+using System.Data;
 
 namespace GamerzList.MainPage
 {
@@ -33,6 +34,8 @@ namespace GamerzList.MainPage
             {
                 string userName = Session["UserName"].ToString();
                 string passWord = Session["UserPass"].ToString();
+
+                Response.Write($"<script> alert(User ID: {Session["UserId"]}) </script><br>");
 
                 if (userName != "User")
                 {
@@ -102,7 +105,7 @@ namespace GamerzList.MainPage
                     int id = (int)sdr["Id"];
                     byte[] data = (byte[])sdr["UserPFP"];
 
-                    Session["UserId"] = id;
+                    Session["UserId"] = id.ToString(); // Convert to string
                     Session["UserName"] = uId;
                     Session["UserPass"] = uPass;
 
@@ -135,7 +138,6 @@ namespace GamerzList.MainPage
 
         private void SavePostToDatabase(string postContent, string postTitle, string userId)
         {
-            string postUserId = Session["UserId"].ToString(); // Check for null with ?. operator
             if (string.IsNullOrEmpty(userId))
             {
                 // If the user is not logged in, redirect to the login page
@@ -165,21 +167,23 @@ namespace GamerzList.MainPage
 
         protected void btnSubmitPost_Click(object sender, EventArgs e)
         {
+            string postTitle = txtPostTitle.Text.Trim();
             string postContent = txtPostContent.Text.Trim();
-            string postTitle = "My Post Title"; // You can change this to a value entered by the user, or remove it altogether
-            string userId = Session["UserId"] as string; // Use 'as' keyword to avoid NullReferenceException
 
-            if (string.IsNullOrEmpty(userId))
+            if (!string.IsNullOrEmpty(postTitle) && !string.IsNullOrEmpty(postContent))
             {
-                // If the user is not logged in, redirect to the login page
-                Response.Redirect("../Login/LogIN.aspx");
-                return;
-            }
-
-            if (!string.IsNullOrEmpty(postContent))
-            {
+                string userId = Session["Username"].ToString();
                 SavePostToDatabase(postContent, postTitle, userId);
-                Response.Redirect(Request.RawUrl); // Refresh the page
+
+                LoadPostsFromDatabase();
+
+                // Clear the input fields after submitting the post
+                txtPostTitle.Text = string.Empty;
+                txtPostContent.Text = string.Empty;
+            }
+            else
+            {
+                
             }
         }
         /*

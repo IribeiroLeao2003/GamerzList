@@ -39,7 +39,8 @@ namespace GamerzList
                     Session["UserName"] = uName;
                     Session["UserPass"] = uPass;
                     con.Close();
-                    Response.Redirect("../MainPage/MainPage.aspx");
+                    Response.Redirect("../MainPage/MainPage.aspx", false);
+                    return;
                 }
                 else
                 {

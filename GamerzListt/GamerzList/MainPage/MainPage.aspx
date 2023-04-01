@@ -40,7 +40,7 @@
                                     <h5 class="card-title"><%# Eval("Title") %></h5>
                                     <p class="card-text"><%# Eval("Content") %></p>
                                     <p class="card-text">
-                                        <small class="text-muted">Posted by <%# Eval("UserId") %> on <%# Eval("DateCreated", "{0:g}") %></small>
+                                       <small class="text-muted">Posted by <%# Eval("UserId") %> on <%# Eval("CreatedAt", "{0:g}") %></small>
                                     </p>
                                 </div>
                             </div>

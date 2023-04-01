@@ -27,4 +27,6 @@
             <asp:LinkButton ID="StayUser1"  runat="server" OnClick="StayUser1_Click" CausesValidation="false">Stay as User?</asp:LinkButton>
         </div> 
     </form>
-</body>
+</body>  
+</html>
+
