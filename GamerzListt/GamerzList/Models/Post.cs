@@ -11,8 +11,9 @@ namespace GamerzList.Models
         public string Title { get; set; }
         public string Content { get; set; }
         public string UserId { get; set; } 
-
         public DateTime DateCreated { get; set; }
+        public int Likes { get; set; }
+        public int Dislikes { get; set; }
 
     }
 }

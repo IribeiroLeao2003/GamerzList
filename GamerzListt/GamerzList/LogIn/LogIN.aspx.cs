@@ -31,7 +31,7 @@ namespace GamerzList
                 string uName = UserName.Text;
                 string uPass = UserPassword.Text;
                 con.Open();
-                string qry = "select * from login where UserId='" + uName + "' and userPass='" + uPass + "'";
+                string qry = "select * from login where UserName='" + uName + "' and userPass='" + uPass + "'";
                 SqlCommand cmd = new SqlCommand(qry, con);
                 SqlDataReader sdr = cmd.ExecuteReader();
                 if (sdr.Read())

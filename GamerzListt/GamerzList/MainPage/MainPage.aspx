@@ -32,7 +32,7 @@
         <br />
         <div class="container">
             <div class="row">
-                <asp:Repeater ID="PostRepeater" runat="server" EnableViewState="false">
+              <asp:Repeater ID="PostRepeater" runat="server" EnableViewState="false" ItemType="System.Object" OnItemCommand="PostRepeater_ItemCommand">
                     <ItemTemplate>
                         <div class="col-md-4">
                             <div class="card mb-4">
@@ -41,7 +41,11 @@
                                     <p class="card-text"><%# Eval("Content") %></p>
                                     <p class="card-text">
                                        <small class="text-muted">Posted by <%# Eval("UserId") %> on <%# Eval("CreatedAt", "{0:g}") %></small>
-                                    </p>
+                                    </p> 
+                                        <asp:Button ID="btnLike" runat="server" Text="Like" CommandName="Like" OnCommand="PostRepeater_ItemCommand" CommandArgument='<%# Eval("Id") %>' />
+                                        <asp:Label ID="lblLikes" runat="server" Text='<%# Eval("Likes") %>' />
+                                        <asp:Button ID="btnDislike" runat="server" Text="Dislike" CommandName="Dislike" OnCommand="PostRepeater_ItemCommand" CommandArgument='<%# Eval("Id") %>' />
+                                        <asp:Label ID="lblDislikes" runat="server" Text='<%# Eval("Dislikes") %>' />
                                 </div>
                             </div>
                         </div>

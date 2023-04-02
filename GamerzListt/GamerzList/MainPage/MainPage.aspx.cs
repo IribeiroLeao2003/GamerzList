@@ -35,7 +35,7 @@ namespace GamerzList.MainPage
                 string userName = Session["UserName"].ToString();
                 string passWord = Session["UserPass"].ToString();
 
-                Response.Write($"<script> alert(User ID: {Session["UserId"]}) </script><br>");
+                
 
                 if (userName != "User")
                 {
@@ -59,9 +59,26 @@ namespace GamerzList.MainPage
             {
                 userPfp.Attributes["src"] = "../Images/efda444fa90a377715eef7239c5bc291.png";
             }
+            
+            
         }
 
-        // ... (rest of the code)
+        protected void PostRepeater_ItemCommand(object sender, CommandEventArgs e)
+        {
+            int postId = Convert.ToInt32(e.CommandArgument);
+
+            if (e.CommandName == "Like")
+            {
+                UpdatePostLikes(postId, 1);
+            }
+            else if (e.CommandName == "Dislike")
+            {
+                UpdatePostLikes(postId, -1);
+            }
+
+            LoadPostsFromDatabase();
+        }
+
 
         public byte[] GetUserProfileImage(string uId, string uPass)
         {
@@ -70,7 +87,7 @@ namespace GamerzList.MainPage
                 SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["mycon"].ToString());
                 con.Open();
                 byte[] data;
-                string qry = "select UserPFP from login where UserId='" + uId + "' and userPass='" + uPass + "'";
+                string qry = "select UserPFP from login where UserName='" + uId + "' and userPass='" + uPass + "'";
                 SqlCommand cmd = new SqlCommand(qry, con);
                 SqlDataReader sdr = cmd.ExecuteReader();
                 if (sdr.Read())
@@ -96,16 +113,14 @@ namespace GamerzList.MainPage
             {
                 SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["mycon"].ToString());
                 con.Open();
-                string qry = "select Id, UserPFP from login where UserId='" + uId + "' and userPass='" + uPass + "'";
+                string qry = "select UserPFP from login where UserName='" + uId + "' and userPass='" + uPass + "'";
                 SqlCommand cmd = new SqlCommand(qry, con);
                 SqlDataReader sdr = cmd.ExecuteReader();
 
                 if (sdr.Read())
                 {
-                    int id = (int)sdr["Id"];
                     byte[] data = (byte[])sdr["UserPFP"];
 
-                    Session["UserId"] = id.ToString(); // Convert to string
                     Session["UserName"] = uId;
                     Session["UserPass"] = uPass;
 
@@ -177,68 +192,16 @@ namespace GamerzList.MainPage
 
                 LoadPostsFromDatabase();
 
-                // Clear the input fields after submitting the post
+                
                 txtPostTitle.Text = string.Empty;
                 txtPostContent.Text = string.Empty;
             }
             else
             {
-                
+                LoadPostsFromDatabase();
             }
         }
-        /*
-        public void getGameimg()
-        {
-            try
-            {
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["mycon"].ToString());
-
-                con.Open();
-                byte[] data;
-                string qry = "select gameImage from Game_Table";
-                SqlCommand cmd = new SqlCommand(qry, con);
-                SqlDataReader sdr = cmd.ExecuteReader();
-
-                while (sdr.Read() && currentGameLine <= 4) // use a loop instead of if statement
-                {
-                    data = (byte[])sdr["gameImage"];
-                    if (data.Length > 0)
-                    {
-                        string imageData = Convert.ToBase64String(data);
-
-                        switch (currentGameLine)
-                        {
-                            case 1:
-                                GamesLine1.ImageUrl = "data:image/jpeg;base64," + imageData;
-                                GamesLine1.Visible = true;
-                                break;
-                            case 2:
-                                GamesLine2.ImageUrl = "data:image/jpeg;base64," + imageData;
-                                GamesLine2.Visible = true;
-                                break;
-                            case 3:
-                                GamesLine3.ImageUrl = "data:image/jpeg;base64," + imageData;
-                                GamesLine3.Visible = true;
-                                break;
-                            case 4:
-                                GamesLine4.ImageUrl = "data:image/jpeg;base64," + imageData;
-                                GamesLine4.Visible = true;
-                                break;
-                        }
-
-                        currentGameLine++;
-                    }
-                }
-
-                con.Close();
-
-            }
-            catch (Exception ex)
-            {
-                // Handle exception
-            }
-        } 
-        */
+   
         public void LoadPosts()
         {
             List<Post> posts = new List<Post>();
@@ -258,7 +221,9 @@ namespace GamerzList.MainPage
                         Title = sdr["Title"].ToString(),
                         Content = sdr["Content"].ToString(),
                         UserId = sdr["UserId"].ToString(),
-                        DateCreated = (DateTime)sdr["DateCreated"]
+                        DateCreated = (DateTime)sdr["DateCreated"],
+                        Likes = (int)sdr["Likes"],
+                        Dislikes = (int)sdr["Dislikes"]
                     };
                     posts.Add(post);
                 }
@@ -279,7 +244,7 @@ namespace GamerzList.MainPage
                 
                 con.Open();
                 byte[] data;
-                string qry = "select UserPFP from login where UserId='" + uId + "' and userPass='" + uPass + "'";
+                string qry = "select UserPFP from login where UserName='" + uId + "' and userPass='" + uPass + "'";
                 SqlCommand cmd = new SqlCommand(qry, con);
                 SqlDataReader sdr = cmd.ExecuteReader();
                 if (sdr.Read())
@@ -302,7 +267,46 @@ namespace GamerzList.MainPage
             }
             
         }
-      
+        private void UpdatePostLikes(int postId, int likeValue)
+        {
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["mycon"].ToString()))
+            {
+                con.Open();
+                string qry = "UPDATE Posts SET Likes = Likes + @LikeValue, Dislikes = Dislikes - @DislikeValue WHERE Id = @PostId";
+                using (SqlCommand cmd = new SqlCommand(qry, con))
+                {
+                    cmd.Parameters.AddWithValue("@PostId", postId);
+                    if (likeValue > 0)
+                    {
+                        cmd.Parameters.AddWithValue("@LikeValue", 1);
+                        cmd.Parameters.AddWithValue("@DislikeValue", 0);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@LikeValue", 0);
+                        cmd.Parameters.AddWithValue("@DislikeValue", 1);
+                    }
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        protected void btnLike_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            int postId = Convert.ToInt32(btn.CommandArgument);
+            UpdatePostLikes(postId, 1);
+            LoadPostsFromDatabase();
+        }
+
+        protected void btnDislike_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            int postId = Convert.ToInt32(btn.CommandArgument);
+            UpdatePostLikes(postId, -1);
+            LoadPostsFromDatabase();
+        }
+
         protected void Unnamed_Click(object sender, EventArgs e)
         {
             Session["UserName"] = null;
