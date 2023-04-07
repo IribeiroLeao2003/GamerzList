@@ -27,27 +27,31 @@ namespace GamerzList.MainPage
             if (!IsPostBack)
             {
                 LoadPostsFromDatabase();
-            }
-            ValidationSettings.UnobtrusiveValidationMode = UnobtrusiveValidationMode.None;
+                ValidationSettings.UnobtrusiveValidationMode = UnobtrusiveValidationMode.None;
 
-            if (Session["UserName"] != null && Session["UserPass"] != null)
-            {
-                string userName = Session["UserName"].ToString();
-                string passWord = Session["UserPass"].ToString();
-
-                
-
-                if (userName != "User")
+                if (Session["UserName"] != null && Session["UserPass"] != null)
                 {
-                    byte[] myImage = GetUserProfileImage(userName, passWord);
-                    if (myImage == null)
+                    string userName = Session["UserName"].ToString();
+                    string passWord = Session["UserPass"].ToString();
+
+
+
+                    if (userName != "User")
                     {
-                        userPfp.Attributes["src"] = "../Images/efda444fa90a377715eef7239c5bc291.png";
+                        byte[] myImage = GetUserProfileImage(userName, passWord);
+                        if (myImage == null)
+                        {
+                            userPfp.Attributes["src"] = "../Images/efda444fa90a377715eef7239c5bc291.png";
+                        }
+                        else
+                        {
+                            string imageData = Convert.ToBase64String(myImage);
+                            userPfp.Attributes["src"] = "data:image/jpeg;base64," + imageData;
+                        }
                     }
                     else
                     {
-                        string imageData = Convert.ToBase64String(myImage);
-                        userPfp.Attributes["src"] = "data:image/jpeg;base64," + imageData;
+                        userPfp.Attributes["src"] = "../Images/efda444fa90a377715eef7239c5bc291.png";
                     }
                 }
                 else
@@ -55,10 +59,7 @@ namespace GamerzList.MainPage
                     userPfp.Attributes["src"] = "../Images/efda444fa90a377715eef7239c5bc291.png";
                 }
             }
-            else
-            {
-                userPfp.Attributes["src"] = "../Images/efda444fa90a377715eef7239c5bc291.png";
-            }
+           
             
             
         }
@@ -78,6 +79,7 @@ namespace GamerzList.MainPage
 
             LoadPostsFromDatabase();
         }
+
 
 
         public byte[] GetUserProfileImage(string uId, string uPass)
@@ -142,14 +144,18 @@ namespace GamerzList.MainPage
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["mycon"].ToString()))
             {
                 con.Open();
-                string qry = "SELECT * FROM Posts ORDER BY CreatedAt DESC";
-                SqlCommand cmd = new SqlCommand(qry, con);
+                string query = "SELECT p.Id, p.Title, p.Content, p.UserId, p.CreatedAt, p.Likes, p.Dislikes, COUNT(c.Id) as CommentsCount " +
+                               "FROM dbo.Posts p LEFT JOIN dbo.Comments c ON p.Id = c.PostId " +
+                               "GROUP BY p.Id, p.Title, p.Content, p.UserId, p.CreatedAt, p.Likes, p.Dislikes " +
+                               "ORDER BY p.CreatedAt DESC";
+                SqlCommand cmd = new SqlCommand(query, con);
                 SqlDataReader sdr = cmd.ExecuteReader();
                 PostRepeater.DataSource = sdr;
                 PostRepeater.DataBind();
                 con.Close();
             }
         }
+
 
         private void SavePostToDatabase(string postContent, string postTitle, string userId)
         {

@@ -21,3 +21,39 @@
         color: white !important;
         background-color: #FF8C00 !important;
     }
+
+.card {
+    background-color: white;
+    margin-bottom: 20px;
+    font-size: 20px;
+    width: 100%; /* Make the card as wide as the write post box */
+    margin: 0 auto;
+    min-height: 150px;
+}
+
+.card-img {
+    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+.form-control,
+.btn {
+    width: 100%;
+}
+
+.btn {
+    font-size: 0.9rem;
+}
+
+.ml-2 {
+    margin-left: 0.5rem;
+}
+
+.ml-3 {
+    margin-left: 1rem;
+}

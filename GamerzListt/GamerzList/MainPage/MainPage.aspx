@@ -32,25 +32,23 @@
         <br />
         <div class="container">
             <div class="row">
-              <asp:Repeater ID="PostRepeater" runat="server" EnableViewState="false" ItemType="System.Object" OnItemCommand="PostRepeater_ItemCommand">
-                    <ItemTemplate>
-                        <div class="col-md-4">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <h5 class="card-title"><%# Eval("Title") %></h5>
-                                    <p class="card-text"><%# Eval("Content") %></p>
-                                    <p class="card-text">
-                                       <small class="text-muted">Posted by <%# Eval("UserId") %> on <%# Eval("CreatedAt", "{0:g}") %></small>
-                                    </p> 
-                                        <asp:Button ID="btnLike" runat="server" Text="Like" CommandName="Like" OnCommand="PostRepeater_ItemCommand" CommandArgument='<%# Eval("Id") %>' />
-                                        <asp:Label ID="lblLikes" runat="server" Text='<%# Eval("Likes") %>' />
-                                        <asp:Button ID="btnDislike" runat="server" Text="Dislike" CommandName="Dislike" OnCommand="PostRepeater_ItemCommand" CommandArgument='<%# Eval("Id") %>' />
-                                        <asp:Label ID="lblDislikes" runat="server" Text='<%# Eval("Dislikes") %>' />
-                                </div>
+            <asp:Repeater ID="PostRepeater" runat="server" OnItemCommand="PostRepeater_ItemCommand">
+                <ItemTemplate>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title"><%# Eval("Title") %></h5>
+                            <p class="card-text"><%# Eval("Content") %></p>
+                            <small class="text-muted">Posted by <%# Eval("UserId") %> on <%# Eval("CreatedAt", "{0:MMMM dd, yyyy}") %></small>
+                            <div class="mt-3">
+                                <asp:Button ID="btnLike" runat="server" CssClass="btn btn-primary" Text='<%# "Like (" + Eval("Likes") + ")" %>' CommandArgument='<%# Eval("Id") %>' OnClick="btnLike_Click" />
+                                <asp:Button ID="btnDislike" runat="server" CssClass="btn btn-danger ml-2" Text='<%# "Dislike (" + Eval("Dislikes") + ")" %>' CommandArgument='<%# Eval("Id") %>' OnClick="btnDislike_Click" />
+                                <span class="ml-3">Comments: <%# Eval("CommentsCount") %></span>
                             </div>
                         </div>
-                    </ItemTemplate>
-                </asp:Repeater>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+
             </div>
         </div>
     </form>
